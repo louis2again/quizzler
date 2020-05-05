@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+//TODO: Step 2 - Import the rFlutter_Alert package here.
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -32,33 +34,39 @@ class _QuizPageState extends State<QuizPage> {
 
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
+
     setState(() {
-      if (userPickedAnswer == correctAnswer) {
-        scoreKeeper.add(Icon(
-          Icons.check,
-          color: Colors.green,
-        ));
+      //TODO: Step 4 - Use IF/ELSE to check if we've reached the end of the quiz. If true, execute Part A, B, C, D.
+      if (quizBrain.isFinished(true)) {
+        //TODO: Step 4 Part A - show an alert using rFlutter_alert (remember to read the docs for the package!)
+        //HINT! Step 4 Part B is in the quiz_brain.dart
+        Alert(
+                context: context,
+                title: "Finished",
+                desc:
+                    "Congratualations you've finiahed the Quiz and it will start again")
+            .show();
+        //TODO: Step 4 Part C - reset the questionNumber,
+        quizBrain.reset();
+        //TODO: Step 4 Part D - empty out the scoreKeeper.
+        scoreKeeper = [];
+        //TODO: Step 5 - If we've not reached the end, ELSE do the answer checking steps below 👇
       } else {
-        scoreKeeper.add(Icon(
-          Icons.close,
-          color: Colors.red,
-        ));
+        if (userPickedAnswer == correctAnswer) {
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
-
-//  Initial code before creating list tiem objects
-//  List<String> questions = [
-//    'You can lead a cow down stairs but not up stairs.',
-//    'Approximately one quarter of human bones are in the feet.',
-//    'A slug\'s blood is green.'
-//  ];
-//
-//  List<bool> answers = [false, true, true];
-//
-//  Question q1 = Question(
-//      q: 'You can lead a cow down stairs but not up stairs.', a: false);
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +129,6 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        // Score keeper code with icons
         Row(
           children: scoreKeeper,
         )
@@ -129,9 +136,3 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 }
-
-/*
-question1: 'You can lead a cow down stairs but not up stairs.', false,
-question2: 'Approximately one quarter of human bones are in the feet.', true,
-question3: 'A slug\'s blood is green.', true,
-*/
